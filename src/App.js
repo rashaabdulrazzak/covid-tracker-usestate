@@ -1,17 +1,39 @@
-import { FormControl } from "@mui/material";
+import { Card, CardContent, FormControl } from "@mui/material";
 import "./App.css";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { useState, useEffect } from "react";
 import Select from "@mui/material/Select";
 import InfoBoxs from "./components/InfoBoxs";
+import Map from "./components/Map";
 function App() {
   const [countries, setCountries] = useState(["USA", "UK", "INDIA"]);
   const [country, setCountry] = useState("worldwide");
-  const onCountryChange = (event) => {
+  const [countryInfo, setCountryInfo] = useState({});
+  const onCountryChange = async (event) => {
     const countryCode = event.target.value;
     setCountry(countryCode);
+    const url =
+      countryCode === "worldwide"
+        ? "https://disease.sh/v3/covid-19/all"
+        : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
+    await fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setCountry(countryCode);
+        // All of the data...
+        // from the country response
+        setCountryInfo(data);
+        console.log("cp", countryInfo);
+      });
   };
+  useEffect(() => {
+    fetch("https://disease.sh/v3/covid-19/all")
+      .then((response) => response.json())
+      .then((data) => {
+        setCountryInfo(data);
+      });
+  }, []);
   useEffect(() => {
     // The code inside here will run once when the component loads and not again
     // async -> send a request, wait for it, do something with it
@@ -46,38 +68,64 @@ function App() {
     getCountriesData();
   }, []);
   return (
-    <div className="App">
-      {/* Header */}
-      {/* Title + Select input dropdown field */}
-      <div className="app_header">
-        <h1> Covid 19 Tracker</h1>
-        <FormControl className="app_dropdowm">
-          <InputLabel id="demo-simple-select-label">
-            {" "}
-            Select Your Country
-          </InputLabel>
-          <Select variant="outlined" onChange={onCountryChange} value={country}>
-            {
-              // Loop through all the countries and show a dropdown list of the options
-              countries.map((country) => (
-                <MenuItem value={country.value}>{country.name}</MenuItem>
-              ))
-            }
-          </Select>
-        </FormControl>
+    <div className="app">
+      <div className="app_left">
+        {/* Header */}
+        {/* Title + Select input dropdown field */}
+        <div className="app_header">
+          <h1> Covid 19 Tracker</h1>
+          <FormControl className="app_dropdowm">
+            <InputLabel id="demo-simple-select-label">
+              {" "}
+              Select Your Country
+            </InputLabel>
+            <Select
+              variant="outlined"
+              onChange={onCountryChange}
+              value={country}
+            >
+              {
+                // Loop through all the countries and show a dropdown list of the options
+                countries.map((country) => (
+                  <MenuItem value={country.value}>{country.name}</MenuItem>
+                ))
+              }
+            </Select>
+          </FormControl>
+        </div>
+        {/* InfoBoxs */}
+        <div className="app_stats">
+          {/* InfoBoxs title="Coronavirus cases" */}
+          {/* InfoBoxs title="Coronavirus cases" */}
+          <InfoBoxs
+            title="Coronavirus cases"
+            cases={countryInfo.todayCases}
+            total={countryInfo.cases}
+          />
+          <InfoBoxs
+            title="Recovered"
+            cases={countryInfo.todayRecovered}
+            total={countryInfo.recovered}
+          />
+          <InfoBoxs
+            title="Death"
+            cases={countryInfo.todayDeaths}
+            total={countryInfo.deaths}
+          />
+        </div>
+        {/* InfoBoxs */}
+        {/*table*/}
+        {/*graph*/}
+        {/*map*/}
+        <Map />
       </div>
-      {/* InfoBoxs */}
-      <div className="app_stats">
-        {/* InfoBoxs title="Coronavirus cases" */}
-        {/* InfoBoxs title="Coronavirus cases" */}
-        <InfoBoxs title="Coronavirus cases" cases={123} total={2000} />
-        <InfoBoxs title="Recovered" cases={100} total={2000} />
-        <InfoBoxs title="Death" cases={23} total={2000} />
-      </div>
-      {/* InfoBoxs */}
-      {/*table*/}
-      {/*graph*/}
-      {/*map*/}
+      <Card className="app_right">
+        <CardContent>
+          <h3>Live Cases by Country</h3>
+        </CardContent>
+        {/* Table */}
+        {/* Graph */}
+      </Card>
     </div>
   );
 }
