@@ -6,10 +6,13 @@ import { useState, useEffect } from "react";
 import Select from "@mui/material/Select";
 import InfoBoxs from "./components/InfoBoxs";
 import Map from "./components/Map";
+import Table from "./components/Table";
+import { sortData } from "./util/utils";
 function App() {
   const [countries, setCountries] = useState(["USA", "UK", "INDIA"]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
+  const [tableData, setTableData] = useState([]);
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
     setCountry(countryCode);
@@ -61,7 +64,9 @@ function App() {
             name: country.country, // United States, United Kingdom, France
             value: country.countryInfo.iso2, // USA, UK, FR
           }));
+          const sortedData = sortData(data);
           setCountries(countries);
+          setTableData(sortedData);
           console.log(countries);
         });
     };
@@ -124,6 +129,7 @@ function App() {
           <h3>Live Cases by Country</h3>
         </CardContent>
         {/* Table */}
+        <Table countries={tableData} />
         {/* Graph */}
       </Card>
     </div>
