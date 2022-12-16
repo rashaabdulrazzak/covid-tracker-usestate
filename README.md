@@ -1,6 +1,12 @@
-# Getting Started with Create React App
+# Getting Started with Covid Track app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is built with react to show the stats of covid 19 in all countries which includes (recovered- death - infected) cases.
+
+## Technologies Used:
+
+- React
+- [Material UI](https://mui.com/)
+-
 
 ## Available Scripts
 
