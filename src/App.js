@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Select from "@mui/material/Select";
 import InfoBoxs from "./components/InfoBoxs";
 import Map from "./components/Map";
+import LineGraph from "./components/LineGraph";
 import Table from "./components/Table";
 import { sortData } from "./util/utils";
 function App() {
@@ -131,6 +132,7 @@ function App() {
         {/* Table */}
         <Table countries={tableData} />
         {/* Graph */}
+        <LineGraph />
       </Card>
     </div>
   );
