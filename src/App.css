@@ -12,11 +12,20 @@ body{
   padding: 20px;
  
 }
+
+.app__dropdown {
+  background-color: white;
+}
 .app_header{
   display: flex;  
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+.app_header h1{
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #555;
 }
 .app_stats{
   display: flex;
